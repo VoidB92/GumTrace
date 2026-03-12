@@ -181,7 +181,8 @@ void GumTrace::callout_callback(GumCpuContext *cpu_context, gpointer user_data) 
             }
 
             if (flag) {
-                uintptr_t write_address = base + index + op.mem.disp;
+                uintptr_t shifted_index = Utils::apply_shift(index, op.shift.type, op.shift.value);
+                uintptr_t write_address = base + shifted_index + op.mem.disp;
                 Utils::append_string(buff, buff_n, "mem_w=0x");
                 Utils::append_uint64_hex(buff, buff_n, write_address);
                 Utils::append_char(buff, buff_n, ' ');
@@ -213,7 +214,8 @@ void GumTrace::callout_callback(GumCpuContext *cpu_context, gpointer user_data) 
                 Utils::append_char(buff, buff_n, ' ');
             }
             if (flag) {
-                uintptr_t read_address = base + index + op.mem.disp;
+                uintptr_t shifted_index = Utils::apply_shift(index, op.shift.type, op.shift.value);
+                uintptr_t read_address = base + shifted_index + op.mem.disp;
                 mem_r_addr = read_address;
                 Utils::append_string(buff, buff_n, "mem_r=0x");
                 Utils::append_uint64_hex(buff, buff_n, read_address);

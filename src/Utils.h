@@ -69,6 +69,24 @@ public:
 
     static void append_uint64_hex(char* buff, int& counter, uint64_t val);
     static void append_uint64_hex_fixed(char* buff, int& counter, uint64_t val);
+
+    static inline uintptr_t apply_shift(__uint128_t value, arm64_shifter type, unsigned int amount) {
+        uintptr_t val = (uintptr_t)value;
+        switch (type) {
+            case ARM64_SFT_LSL:
+                return val << amount;
+            case ARM64_SFT_LSR:
+                return val >> amount;
+            case ARM64_SFT_ASR:
+                return (uintptr_t)((intptr_t)val >> amount);
+            case ARM64_SFT_ROR:
+                return (val >> amount) | (val << (64 - amount));
+            case ARM64_SFT_MSL:
+                return (val << amount) | ((1ULL << amount) - 1);
+            default:
+                return val;
+        }
+    }
 };
 
 
